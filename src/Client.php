@@ -45,22 +45,16 @@ final class Client implements ClientInterface
     {
         $this->getAccessToken();
 
-        $response = $this->httpClient->post(
-            'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-            [
-                'content-type' => 'application/json',
-                'Authorization' => \sprintf('Bearer %s', $this->accessToken ?? ''),
-            ],
-            \json_encode(
-                [
-                    'message_template_id' => $templateId,
+        $response = Http::withHeaders([
+            'content-type'  => 'application/json',
+            'Authorization' => \sprintf('Bearer %s', $this->accessToken ?? ''),
+        ],)
+            ->post('https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct', [
+                    'message_template_id'    => $templateId,
                     'channel_integration_id' => $channelId,
-                ] + $this->makeRequestBody($message)
-            )
-        );
+                ] + $this->makeRequestBody($message));
 
-        /** @var array $responseBody */
-        $responseBody = \json_decode((string) $response->getBody(), true);
+        $responseBody = $response->json();
 
         Assert::keyExists($responseBody, 'data');
 
