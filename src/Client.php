@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inisiatif\WhatsappQontakPhp;
 
+use Illuminate\Support\Facades\Http;
 use Http\Client\HttpClient;
 use Webmozart\Assert\Assert;
 use Http\Discovery\HttpClientDiscovery;
